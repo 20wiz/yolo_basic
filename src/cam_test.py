@@ -22,6 +22,8 @@ if not ret:
 
 # Save the captured frame to a file
 # cv2.imwrite('captured_image.jpg', frame)
+# print("Image captured and saved to 'captured_image.jpg'")
+
 # show image on screen
 cv2.imshow('Captured Image', frame)
 cv2.waitKey(0)
@@ -30,4 +32,4 @@ cv2.waitKey(0)
 cap.release()
 cv2.destroyAllWindows()
 
-print("Image captured and saved to 'captured_image.jpg'")
+
