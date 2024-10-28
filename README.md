@@ -10,7 +10,7 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
 - `src/`: Source code directory.
   - `cam_test.py`: Script to capture an image from the webcam.
   - `soccer_ball.py`: Script to detect soccer balls in images and real-time webcam feeds.
-- `yolov8n.pt`: YOLO model file.
+- `yolov8n.pt`: YOLO model file. I will be downloaded automatically.
 
 ## Setup
 
@@ -35,9 +35,9 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
     pip install -r requirements.txt
     ```
 
-4. **Download the YOLO model:**
+4. **YOLO model:**
 
-    Place the `yolov8n.pt` file in the root directory of the project.
+    `yolov8n.pt` file will be downloaded in the root directory of the project.
 
 ## Usage
 
@@ -52,9 +52,9 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
 2. **Modify the `image_path` variable in the script to point to your image file:**
 
     ```python
-    image_path = '.\\1.webp'  # Change to your image path
+    image_path = '.\\test1.webp'  # Change to your image path
     ```
-
+![alt text](test1.webp)
 ### Capture an Image from Webcam
 
 1. **Run the `cam_test.py` script:**
@@ -86,3 +86,4 @@ This project is licensed under the MIT License.
 
 - [Ultralytics YOLO](https://github.com/ultralytics/yolov5)
 - [OpenCV](https://opencv.org/)
+- [Claude](https://claude.ai/) 

@@ -11,10 +11,16 @@ def detect_soccer_ball_video(video_path, output_path=None):
         output_path (str, optional): 결과 비디오 저장 경로. None이면 저장하지 않음
     """
     # CPU 사용
-    device = 'cpu' # GPU 사용 시 'cuda:0'
-    
-    # YOLO 모델 로드
-    model = YOLO('yolov8n.pt')
+    # device = 'cpu'   
+    device = 'cuda:0'  # GPU 사용 시 'cuda:0'
+
+    # YOLO 모델 로드 
+    # model_name = "yolov8n.pt"  # nano
+    # model_name = "yolov8s.pt"  # small
+    model_name = "yolov8m.pt"  # medium
+    # model_name = "yolov8s-1280.pt"  # small, 1280 high-res
+ 
+    model = YOLO(model_name) # 
     model.to(device)
     
     # 비디오 캡처 객체 생성
@@ -27,7 +33,10 @@ def detect_soccer_ball_video(video_path, output_path=None):
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    end_frames = int(fps * 4)  # 종료 시간 까지 프레임 수 계산
     
+    frame_count = 0
+
     # 결과 비디오 저장 설정
     if output_path:
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -40,9 +49,10 @@ def detect_soccer_ball_video(video_path, output_path=None):
     
     # 프레임 카운터
     frame_counter = 0
-    
+    ball_detected_frames = 0  # 축구공이 감지된 프레임 수
+        
     try:
-        while True:
+        while frame_count < end_frames:
             ret, frame = cap.read()
             if not ret:
                 break
@@ -50,8 +60,12 @@ def detect_soccer_ball_video(video_path, output_path=None):
             frame_counter += 1
             
             # 객체 감지 수행
-            results = model(frame, device=device)
-            
+            # results = model(frame, device=device)
+            # results = model(frame, device=device, conf=0.2, iou=0.3)
+            # results = model(frame, device=device, conf=0.2, iou=0.3, imgsz=1280) # 
+            # results = model(frame, device=device, conf=0.2, iou=0.3, imgsz=1920) # 
+            results = model(frame, device=device, conf=0.3,  imgsz=1920) # 
+
             # FPS 계산
             fps_counter += 1
             current_time = time.time()
@@ -64,6 +78,7 @@ def detect_soccer_ball_video(video_path, output_path=None):
             progress = (frame_counter / total_frames) * 100
             
             # 결과 처리 및 시각화
+            ball_detected = False
             for result in results:
                 boxes = result.boxes
                 for box in boxes:
@@ -79,7 +94,11 @@ def detect_soccer_ball_video(video_path, output_path=None):
                         label = f'Soccer Ball: {confidence:.2f}'
                         cv2.putText(frame, label, (x1, y1 - 10),
                                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                        ball_detected = True                        
             
+            if ball_detected:
+                ball_detected_frames += 1
+
             # FPS와 진행률 표시
             cv2.putText(frame, f'FPS: {fps_display}', (10, 30),
                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
@@ -90,8 +109,8 @@ def detect_soccer_ball_video(video_path, output_path=None):
             if output_path:
                 out.write(frame)
 
-            # 프레임 크기를 1/4로 조정
-            resized_frame = cv2.resize(frame, (frame.shape[1] // 4, frame.shape[0] // 4))
+            # 프레임 크기를 1/2로 조정
+            resized_frame = cv2.resize(frame, (frame.shape[1] // 2, frame.shape[0] // 2))
             
             # 결과 화면 표시
             cv2.imshow('Soccer Ball Detection', resized_frame)
@@ -100,7 +119,9 @@ def detect_soccer_ball_video(video_path, output_path=None):
             # 'q' 키를 누르면 종료
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-            
+
+            frame_count += 1
+
     except Exception as e:
         print(f"처리 중 에러 발생: {e}")
         
@@ -111,6 +132,9 @@ def detect_soccer_ball_video(video_path, output_path=None):
             out.release()
         cv2.destroyAllWindows()
         print("처리 완료!")
+            # 축구공이 감지된 프레임 수 출력
+        print(f"축구공이 감지된 프레임 수: {ball_detected_frames}")
+
 
 if __name__ == "__main__":
     # 비디오 파일 경로 설정

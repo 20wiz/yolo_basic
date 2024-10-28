@@ -30,9 +30,9 @@ seaborn==0.13.2
 setuptools==75.2.0
 six==1.16.0
 sympy==1.13.1
-torch==2.5.0+cu124
-torchaudio==2.5.0+cu124
-torchvision==0.20.0
+torch==2.4.1+cu124
+torchaudio==2.4.1+cu124
+torchvision==0.19.1+cu124
 tqdm==4.66.5
 typing_extensions==4.12.2
 tzdata==2024.2

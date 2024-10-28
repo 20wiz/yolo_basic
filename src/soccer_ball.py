@@ -2,11 +2,16 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 
+import torch
+print('cuda available ? ', torch.cuda.is_available()) 
+
 def detect_soccer_ball(image_path):
     """
     축구공을 감지하는 함수
     """
-    device = 'cpu'
+    # device = 'cpu'   
+    device = 'cuda:0'  # GPU 사용 시 'cuda:0'
+
     # YOLO 모델 로드 및 CPU 설정
     model = YOLO('yolov8n.pt')
     model.to(device)
@@ -25,7 +30,7 @@ def detect_soccer_ball(image_path):
             class_id = int(box.cls[0])
             class_name = result.names[class_id]
             
-            # 축구공인 경우에만 처리 ('sports ball' 또는 'ball')
+            # 공인 경우에만 처리 ('sports ball' 또는 'ball')
             if class_name in ['sports ball', 'ball']:
                 # 바운딩 박스 좌표
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
