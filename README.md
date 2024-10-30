@@ -4,7 +4,6 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
 
 ## Project Structure
 
-- `dataset/`: Contains the dataset for training and validation.
 - `env_yolo/`: Virtual environment directory.
 - `output/`: Directory for output files.
 - `README.md`: This file.
