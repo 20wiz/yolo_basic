@@ -1,5 +1,5 @@
-# Soccer Ball Detection with YOLO
-
+# Soccer Ball Detection/Tracking with YOLO
+ 
 This project uses the YOLO (You Only Look Once) model to detect soccer balls in images and real-time webcam feeds. The project is implemented in Python and uses the `ultralytics` library for YOLO, along with OpenCV for image processing.
 
 ## Project Structure
@@ -23,8 +23,8 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
 1. **Clone the repository:**
 
     ```sh
-    git clone <repository-url>
-    cd <repository-directory>
+    git clone https://github.com/20wiz/yolo_basic
+    cd yolo_basic
     ```
 
 2. **Create and activate a virtual environment:**
@@ -43,7 +43,7 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
 
 4. **YOLO model:**
 
-    `yolov8n.pt` file will be downloaded in the root directory of the project.
+    `yolo*.pt` model file will be downloaded in the root directory of the project.
 
 ## Usage
 
