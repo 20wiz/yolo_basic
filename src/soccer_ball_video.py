@@ -6,17 +6,17 @@ save_not_detected_frames = False
 
 def detect_soccer_ball_video(video_path, output_path=None):
     """
-    비디오에서 축구공을 감지하는 함수
+    Function to detect soccer balls in a video
     
     Args:
-        video_path (str): 입력 비디오 파일 경로
-        output_path (str, optional): 결과 비디오 저장 경로. None이면 저장하지 않음
+        video_path (str): Input video file path
+        output_path (str, optional): Path to save the result video. If None, do not save
     """
-    # CPU 사용
+    # Use CPU
     # device = 'cpu'   
-    device = 'cuda:0'  # GPU 사용 시 'cuda:0'
+    device = 'cuda:0'  # Use GPU with 'cuda:0'
 
-    # YOLO 모델 로드 
+    # Load YOLO model 
     # model_name = "yolov8n.pt"  # nano
     # model_name = "yolov8s.pt"  # small
     # model_name = "yolov8m.pt"  # medium
@@ -27,34 +27,34 @@ def detect_soccer_ball_video(video_path, output_path=None):
     model = YOLO(model_name) # 
     model.to(device)
     
-    # 비디오 캡처 객체 생성
+    # Create video capture object
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
-        raise ValueError(f"비디오를 열 수 없습니다: {video_path}")
+        raise ValueError(f"Cannot open video: {video_path}")
     
-    # 비디오 속성 가져오기
+    # Get video properties
     frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    end_frames = int(fps * 4)  # 종료 시간 까지 프레임 수 계산
+    end_frames = int(fps * 4)  # Calculate frames until end time
     
     frame_count = 0
     ball_not_detected_count = 0
 
-    # 결과 비디오 저장 설정
+    # Set up result video saving
     if output_path:
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
     
-    # FPS 계산을 위한 변수
+    # Variables for FPS calculation
     prev_time = time.time()
     fps_counter = 0
     fps_display = 0
     
-    # 프레임 카운터
+    # Frame counter
     frame_counter = 0
-    ball_detected_frames = 0  # 축구공이 감지된 프레임 수
+    ball_detected_frames = 0  # Number of frames where soccer ball is detected
         
     try:
         while frame_count < end_frames:
@@ -64,14 +64,14 @@ def detect_soccer_ball_video(video_path, output_path=None):
             
             frame_counter += 1
             
-            # 객체 감지 수행
+            # Perform object detection
             # results = model(frame, device=device)
             # results = model(frame, device=device, conf=0.2, iou=0.3)
             # results = model(frame, device=device, conf=0.2, iou=0.3, imgsz=1280) # 
             # results = model(frame, device=device, conf=0.2, iou=0.3, imgsz=1920) # 
             results = model(frame, device=device, conf=0.2,  imgsz=1920) # 
 
-            # FPS 계산
+            # FPS calculation
             fps_counter += 1
             current_time = time.time()
             if current_time - prev_time >= 1.0:
@@ -79,10 +79,10 @@ def detect_soccer_ball_video(video_path, output_path=None):
                 fps_counter = 0
                 prev_time = current_time
             
-            # 진행률 계산
+            # Calculate progress
             progress = (frame_counter / total_frames) * 100
             
-            # 결과 처리 및 시각화
+            # Process and visualize results
             ball_detected = False
             for result in results:
                 boxes = result.boxes
@@ -94,7 +94,7 @@ def detect_soccer_ball_video(video_path, output_path=None):
                         x1, y1, x2, y2 = map(int, box.xyxy[0])
                         confidence = float(box.conf[0])
                         
-                        # 바운딩 박스 그리기
+                        # Draw bounding box
                         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 2)
                         label = f'Soccer Ball: {confidence:.2f}'
                         cv2.putText(frame, label, (x1, y1 - 10),
@@ -109,34 +109,34 @@ def detect_soccer_ball_video(video_path, output_path=None):
                 if save_not_detected_frames:
                     cv2.imwrite(f'output/frame_{frame_count}.jpg', frame)
 
-            # FPS와 진행률 표시
+            # Display FPS and progress
             cv2.putText(frame, f'FPS: {fps_display}', (10, 30),
                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             cv2.putText(frame, f'Progress: {progress:.1f}%', (10, 70),
                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
             
-            # 결과 저장
+            # Save result
             if output_path:
                 out.write(frame)
 
-            # 프레임 크기를 1/2로 조정
+            # Resize frame to half
             resized_frame = cv2.resize(frame, (frame.shape[1] // 2, frame.shape[0] // 2))
             
-            # 결과 화면 표시
+            # Display result
             cv2.imshow('Soccer Ball Detection', resized_frame)
     
             
-            # 'q' 키를 누르면 종료
+            # Exit on 'q' key press
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
             frame_count += 1
 
     except Exception as e:
-        print(f"처리 중 에러 발생: {e}")
+        print(f"Error occurred during processing: {e}")
         
     finally:
-        # 리소스 해제
+        # Release resources
         cap.release()
         if output_path:
             out.release()
@@ -158,14 +158,14 @@ def detect_soccer_ball_video(video_path, output_path=None):
     print(f"F1-Score: {f1_score:.2f}")
 
 if __name__ == "__main__":
-    # 비디오 파일 경로 설정
-    video_path = "soccer_1.mp4"  # 본인의 비디오 파일 경로로 수정
-    output_path = "output_soccer.mp4"  # 결과 저장할 경로
+    # Set video file path
+    video_path = "soccer_1.mp4"  # Change to your video file path
+    output_path = "output_soccer.mp4"  # Path to save the result
     
     try:
         detect_soccer_ball_video(
             video_path=video_path,
-            output_path=output_path  # 저장하지 않으려면 None으로 설정
+            output_path=output_path  # Set to None if you do not want to save
         )
     except Exception as e:
-        print(f"에러 발생: {e}")
+        print(f"Error occurred: {e}")

@@ -9,9 +9,9 @@ from deep_sort_realtime.deepsort_tracker import DeepSort
 # model = YOLO("yolo11s.pt")
 # model = YOLO("yolo11m.pt")
 model = YOLO("yolov8m.pt")
-# model = YOLO("yolo11m-seg.pt")
+
 # device = 'cpu'   
-device = 'cuda:0'  # GPU 사용 시 'cuda:0'
+device = 'cuda:0'  # Use 'cuda:0' for GPU
 model.to(device)
 
 # Initialize the DeepSort tracker
@@ -21,14 +21,14 @@ tracker = DeepSort(max_age=30, n_init=3)
 video_path = "soccer_1.mp4"
 cap = cv2.VideoCapture(video_path)
 if not cap.isOpened():
-    raise ValueError(f"비디오를 열 수 없습니다: {video_path}")
+    raise ValueError(f"Cannot open video: {video_path}")
 
-# 비디오 속성 가져오기
+# Get video properties
 frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-end_frames = int(fps * 5)  # 종료 시간 까지 프레임 수 계산
+end_frames = int(fps * 5)  # Calculate the number of frames until the end time
 
 # Counter for frames with detected soccer balls
 ball_detected_frames = 0
@@ -41,7 +41,7 @@ while cap.isOpened() and frame_count < end_frames:
     frame_count += 1
 
     if success:
-        results =model(frame, device=device, conf=0.3,  imgsz=1920) #
+        results = model(frame, device=device, conf=0.3, imgsz=1920) #
 
         # Visualize the results on the frame
         annotated_frame = results[0].plot()

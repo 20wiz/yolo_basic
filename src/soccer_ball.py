@@ -6,42 +6,39 @@ import torch
 print('cuda available ? ', torch.cuda.is_available()) 
 
 def detect_soccer_ball(image_path):
-    """
-    축구공을 감지하는 함수
-    """
     # device = 'cpu'   
-    device = 'cuda:0'  # GPU 사용 시 'cuda:0'
+    device = 'cuda:0'  # Use 'cuda:0' for GPU
 
-    # YOLO 모델 로드 및 CPU 설정
+    # Load YOLO model and set to device
     model = YOLO('yolov8n.pt')
     model.to(device)
 
-    # 이미지에서 객체 감지
+    # Detect objects in the image
     results = model(image_path)
     
-    # 원본 이미지 로드
+    # Load the original image
     img = cv2.imread(image_path)
     
-    # 결과 처리
+    # Process results
     for result in results:
         boxes = result.boxes
         for box in boxes:
-            # 클래스 이름 확인
+            # Check class name
             class_id = int(box.cls[0])
             class_name = result.names[class_id]
             
-            # 공인 경우에만 처리 ('sports ball' 또는 'ball')
+            # Process only if it's a ball ('sports ball' or 'ball')
             if class_name in ['sports ball', 'ball']:
-                # 바운딩 박스 좌표
+                # Bounding box coordinates
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 
-                # 신뢰도 점수
+                # Confidence score
                 confidence = float(box.conf[0])
                 
-                # 바운딩 박스 그리기 (빨간색)
+                # Draw bounding box (red)
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 0, 255), 2)
                 
-                # 레이블 추가
+                # Add label
                 label = f'Soccer Ball: {confidence:.2f}'
                 cv2.putText(img, label, (x1, y1 - 10),
                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
@@ -51,10 +48,14 @@ def detect_soccer_ball(image_path):
 
 if __name__ == "__main__":
 
-    # 이미지 파일에서 감지
-    image_path = '.\\test1.webp'  # 본인의 이미지 경로로 수정
+    # Detect from image file
+    image_path = '.\\test1.webp'  # Modify to your image path
     result = detect_soccer_ball(image_path)
-    cv2.imshow('Soccer Ball Detection', result)
+    
+    # Resize the image to half its original size
+    result_resized = cv2.resize(result, (result.shape[1] // 2, result.shape[0] // 2))
+    
+    cv2.imshow('Soccer Ball Detection', result_resized)
     cv2.waitKey(0)
     # cv2.imwrite('result.jpg', result)
-    
+
