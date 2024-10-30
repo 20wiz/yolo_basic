@@ -15,6 +15,8 @@ model.to(device)
 
 # Open the video file
 video_path = "soccer_1.mp4"
+output_path = "output_soccer_track.mp4"  # Path to save the result
+
 cap = cv2.VideoCapture(video_path)
 if not cap.isOpened():
     raise ValueError(f"Cannot open video: {video_path}")
@@ -25,6 +27,11 @@ frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 end_frames = int(fps * 5)  # Calculate the number of frames until the end time
+
+# Set up result video saving
+if output_path:
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_path, fourcc, fps, (frame_width, frame_height))
 
 # Counter for frames with detected soccer balls
 ball_detected_frames = 0
@@ -38,7 +45,8 @@ while cap.isOpened() and frame_count < end_frames:
 
     if success:
         # Run YOLO11 tracking on the frame, persisting tracks between frames
-        results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920, classes=32)
+        # results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920, classes=32)
+        results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920)
 
         # Visualize the results on the frame
         annotated_frame = results[0].plot()
@@ -59,6 +67,10 @@ while cap.isOpened() and frame_count < end_frames:
 
         if ball_detected:
             ball_detected_frames += 1
+
+        # Save result
+        if output_path:
+            out.write(annotated_frame)
 
         resized_frame = cv2.resize(annotated_frame, (annotated_frame.shape[1] // 2, annotated_frame.shape[0] // 2))
 
