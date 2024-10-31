@@ -1,6 +1,6 @@
 # Soccer Ball Detection/Tracking with YOLO
  
-This project uses the YOLO (You Only Look Once) model to detect soccer balls in images and real-time webcam feeds. The project is implemented in Python and uses the `ultralytics` library for YOLO, along with OpenCV for image processing.
+This project uses the YOLO (You Only Look Once) model to detect soccer balls in images,videos and real-time webcam feeds. The project is implemented in Python and uses the `ultralytics` library for YOLO, along with OpenCV for image processing.
 
 ## Project Structure
 
@@ -17,6 +17,11 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
   - `soccer_ball_deepsort.py`: Script to track soccer balls in videos using DeepSort.
   
 - `yolo*.pt`: YOLO model files.
+
+## Version Information
+ tested with
+ - **CUDA Version**: 12.6
+- **Python Version**: 3.12.7
 
 ## Setup
 
@@ -66,6 +71,15 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
 <p align="center">
     <img src="result.jpg" alt="detected result" width="50%">
 </p>
+
+
+If you do not have a GPU available, you can set the device to CPU in the scripts by modifying the `device` variable:
+
+```python
+device = 'cpu'  # Use CPU
+# device = 'cuda:0'  # Use GPU if available
+```
+
 ### Real-Time Soccer Ball Detection with Webcam
 
 1. **Run the `soccer_ball_cam.py` script:**
