@@ -41,7 +41,7 @@ while cap.isOpened() and frame_count < end_frames:
     frame_count += 1
 
     if success:
-        results = model(frame, device=device, conf=0.3, imgsz=1920) #
+        results = model(frame, device=device, conf=0.4, imgsz=1920) # detect
 
         # Visualize the results on the frame
         annotated_frame = results[0].plot()

@@ -8,14 +8,14 @@ from ultralytics import YOLO
 # model = YOLO("yolo11s.pt")
 # model = YOLO("yolo11m.pt")
 model = YOLO("yolov8m.pt")
-# model = YOLO("yolo11m-seg.pt")
+
 # device = 'cpu'   
 device = 'cuda:0'  # Use 'cuda:0' for GPU
 model.to(device)
 
 # Open the video file
 video_path = "soccer_1.mp4"
-output_path = "output_soccer_track.mp4"  # Path to save the result
+output_path = "output_soccer_track_player.mp4"  # Path to save the result
 
 cap = cv2.VideoCapture(video_path)
 if not cap.isOpened():
@@ -45,8 +45,8 @@ while cap.isOpened() and frame_count < end_frames:
 
     if success:
         # Run YOLO11 tracking on the frame, persisting tracks between frames
-        # results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920, classes=32)
-        results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920)
+        # results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920, classes=32) # track ball only
+        results = model.track(frame, persist=True, conf=0.3,  iou=0.2, imgsz=1920) # track all classes
 
         # Visualize the results on the frame
         annotated_frame = results[0].plot()

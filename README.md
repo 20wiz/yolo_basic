@@ -40,6 +40,9 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
     ```sh
     pip install -r requirements.txt
     ```
+    
+    Depending on your GPU driver and CUDA version, you may need to reinstall PyTorch.
+    https://pytorch.org/
 
 4. **YOLO model:**
 
@@ -60,7 +63,9 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
     ```python
     image_path = '.\\test1.webp'  # Change to your image path
     ```
-
+<p align="center">
+    <img src="result.jpg" alt="detected result" width="50%">
+</p>
 ### Real-Time Soccer Ball Detection with Webcam
 
 1. **Run the `soccer_ball_cam.py` script:**
@@ -85,6 +90,23 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
     video_path = 'soccer_1.mp4'  # Change to your video path
     ```
 
+### Track Soccer Ball in a Video using YOLO
+
+1. **Run the `soccer_ball_track.py` script:**
+
+    ```sh
+    python src/soccer_ball_track.py
+    ```
+
+2. **Modify the `video_path` variable in the script to point to your video file:**
+
+    ```python
+    video_path = 'soccer_1.mp4'  # Change to your video path
+    ```
+<p align="center">
+    <img src="output_24fps.gif" alt="detected result" width="50%">
+</p>
+
 ### Track Soccer Ball in a Video using DeepSort
 
 1. **Run the `soccer_ball_deepsort.py` script:**
@@ -99,29 +121,8 @@ This project uses the YOLO (You Only Look Once) model to detect soccer balls in 
     video_path = 'soccer_1.mp4'  # Change to your video path
     ```
 
-### Track Soccer Ball in a Video using YOLO
 
-1. **Run the `soccer_ball_track.py` script:**
 
-    ```sh
-    python src/soccer_ball_track.py
-    ```
-
-2. **Modify the `video_path` variable in the script to point to your video file:**
-
-    ```python
-    video_path = 'soccer_1.mp4'  # Change to your video path
-    ```
-
-### Capture an Image from Webcam
-
-1. **Run the `cam_test.py` script:**
-
-    ```sh
-    python src/cam_test.py
-    ```
-
-2. **The script will capture an image from the webcam and display it.**
 
 ## License
 
