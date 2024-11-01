@@ -1,6 +1,6 @@
-# Soccer Ball Detection/Tracking with YOLO
+# Object Detection/Tracking Demo with YOLO and DeepSort - Soccer Ball Detection/Tracking
  
-This project uses the YOLO (You Only Look Once) model to detect soccer balls in images,videos and real-time webcam feeds. The project is implemented in Python and uses the `ultralytics` library for YOLO, along with OpenCV for image processing.
+This demo uses the YOLO (You Only Look Once) model to detect soccer balls in images,videos and real-time webcam feeds. The project is implemented in Python and uses the `ultralytics` library for YOLO, along with OpenCV for image processing.
 
 ## Project Structure
 
